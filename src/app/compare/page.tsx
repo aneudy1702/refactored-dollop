@@ -25,7 +25,11 @@ function CompareContent() {
   const params = useSearchParams();
   const [url1, setUrl1] = useState(params.get('url1') || '');
   const [url2, setUrl2] = useState(params.get('url2') || '');
-  const [actions, setActions] = useState<Action[]>([]);
+  const [actions, setActions] = useState<Action[]>(() => {
+    const encoded = params.get('actions');
+    if (!encoded) return [];
+    try { return JSON.parse(atob(encoded)); } catch { return []; }
+  });
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState('');
   const [result, setResult] = useState<CompareResult | null>(null);

@@ -60,6 +60,9 @@ export default function ScenariosPage() {
 
   const handleRun = (s: Scenario) => {
     const params = new URLSearchParams({ url1: s.url1, url2: s.url2 });
+    if (s.actions.length > 0) {
+      params.set('actions', btoa(JSON.stringify(s.actions)));
+    }
     router.push(`/compare?${params}`);
   };
 

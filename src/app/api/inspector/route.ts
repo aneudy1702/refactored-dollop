@@ -14,7 +14,6 @@ export async function POST(req: NextRequest) {
 
     browser = await puppeteer.launch({
       headless: true,
-      executablePath: puppeteer.executablePath(),
       args: ['--no-sandbox', '--disable-setuid-sandbox', '--disable-dev-shm-usage'],
     });
 
@@ -43,7 +42,7 @@ export async function POST(req: NextRequest) {
           if (!parent) break;
           const siblings = Array.from(parent.children).filter(c => c.tagName === current!.tagName);
           const idx = siblings.indexOf(current as Element) + 1;
-          parts.unshift(`${current.tagName.toLowerCase()}:nth-child(${idx})`);
+          parts.unshift(`${current.tagName.toLowerCase()}:nth-of-type(${idx})`);
           current = parent;
         }
         selector = parts.join(' > ');

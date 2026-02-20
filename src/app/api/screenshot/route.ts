@@ -21,7 +21,6 @@ export async function POST(req: NextRequest) {
 
     browser = await puppeteer.launch({
       headless: true,
-      executablePath: puppeteer.executablePath(),
       args: ['--no-sandbox', '--disable-setuid-sandbox', '--disable-dev-shm-usage'],
     });
 
