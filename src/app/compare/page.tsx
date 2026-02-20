@@ -1,6 +1,6 @@
 'use client';
 
-import { Suspense, useState, useEffect } from 'react';
+import { Suspense, useState } from 'react';
 import { useSearchParams } from 'next/navigation';
 import ActionList from '@/components/ActionList';
 import ComparisonResult from '@/components/ComparisonResult';
@@ -30,12 +30,6 @@ function CompareContent() {
   const [error, setError] = useState('');
   const [result, setResult] = useState<CompareResult | null>(null);
   const [scenarioOpen, setScenarioOpen] = useState(false);
-
-  useEffect(() => {
-    if (params.get('url1') && params.get('url2')) {
-      // auto-compare on load if both urls are present
-    }
-  }, [params]);
 
   const handleCompare = async () => {
     if (!url1 || !url2) return;
