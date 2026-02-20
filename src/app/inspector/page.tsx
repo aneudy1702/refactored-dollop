@@ -2,6 +2,9 @@
 
 import { useState, useRef } from 'react';
 
+const VIEWPORT_WIDTH = 1280;
+const VIEWPORT_HEIGHT = 800;
+
 interface InspectorResult {
   selector: string;
   tagName: string;
@@ -30,7 +33,7 @@ export default function InspectorPage() {
       const res = await fetch('/api/screenshot', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ url, width: 1280, height: 800 }),
+        body: JSON.stringify({ url, width: VIEWPORT_WIDTH, height: VIEWPORT_HEIGHT }),
       }).then(r => r.json());
       if (res.error) throw new Error(res.error);
       setScreenshot(res.screenshot);
@@ -44,8 +47,8 @@ export default function InspectorPage() {
   const handleImageClick = async (e: React.MouseEvent<HTMLImageElement>) => {
     if (!imgRef.current || !screenshot) return;
     const rect = imgRef.current.getBoundingClientRect();
-    const scaleX = 1280 / rect.width;
-    const scaleY = 800 / rect.height;
+    const scaleX = VIEWPORT_WIDTH / rect.width;
+    const scaleY = VIEWPORT_HEIGHT / rect.height;
     const relX = (e.clientX - rect.left) * scaleX;
     const relY = (e.clientY - rect.top) * scaleY;
 
@@ -60,7 +63,7 @@ export default function InspectorPage() {
       const res = await fetch('/api/inspector', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ url, x: Math.round(relX), y: Math.round(relY), width: 1280, height: 800 }),
+        body: JSON.stringify({ url, x: Math.round(relX), y: Math.round(relY), width: VIEWPORT_WIDTH, height: VIEWPORT_HEIGHT }),
       }).then(r => r.json());
       if (res.error) throw new Error(res.error);
       setResult(res);

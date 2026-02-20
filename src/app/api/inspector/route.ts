@@ -3,6 +3,9 @@ export const dynamic = 'force-dynamic';
 import { NextRequest, NextResponse } from 'next/server';
 import puppeteer from 'puppeteer';
 
+const PAGE_TIMEOUT = 30000;
+const MAX_TEXT_LENGTH = 200;
+
 export async function POST(req: NextRequest) {
   let browser;
   try {
@@ -19,9 +22,9 @@ export async function POST(req: NextRequest) {
 
     const page = await browser.newPage();
     await page.setViewport({ width, height });
-    await page.goto(url, { waitUntil: 'networkidle2', timeout: 30000 });
+    await page.goto(url, { waitUntil: 'networkidle2', timeout: PAGE_TIMEOUT });
 
-    const result = await page.evaluate((cx: number, cy: number) => {
+    const result = await page.evaluate((cx: number, cy: number, maxLen: number) => {
       const el = document.elementFromPoint(cx, cy) as HTMLElement | null;
       if (!el) return { selector: 'body', tagName: 'BODY', innerText: '' };
 
@@ -51,9 +54,9 @@ export async function POST(req: NextRequest) {
       return {
         selector,
         tagName,
-        innerText: (el.innerText || '').substring(0, 200),
+        innerText: (el.innerText || '').substring(0, maxLen),
       };
-    }, x, y);
+    }, x, y, MAX_TEXT_LENGTH);
 
     await browser.close();
     return NextResponse.json(result);

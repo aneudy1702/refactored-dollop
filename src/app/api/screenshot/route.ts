@@ -3,6 +3,8 @@ export const dynamic = 'force-dynamic';
 import { NextRequest, NextResponse } from 'next/server';
 import puppeteer from 'puppeteer';
 
+const PAGE_TIMEOUT = 30000;
+
 type Action = {
   type: 'click' | 'type' | 'wait';
   selector?: string;
@@ -26,7 +28,7 @@ export async function POST(req: NextRequest) {
 
     const page = await browser.newPage();
     await page.setViewport({ width, height });
-    await page.goto(url, { waitUntil: 'networkidle2', timeout: 30000 });
+    await page.goto(url, { waitUntil: 'networkidle2', timeout: PAGE_TIMEOUT });
 
     for (const action of actions as Action[]) {
       if (action.type === 'click' && action.selector) {

@@ -13,6 +13,8 @@ interface ComparisonResultProps {
 
 type Tab = 'site1' | 'site2' | 'diff';
 
+const DIFF_THRESHOLD_PERCENT = 5;
+
 export default function ComparisonResult({
   screenshot1,
   screenshot2,
@@ -57,7 +59,7 @@ export default function ComparisonResult({
         <div className="text-sm text-gray-600 space-x-4">
           <span>
             Diff:{' '}
-            <span className={diffPercent > 5 ? 'text-red-600 font-bold' : 'text-green-600 font-bold'}>
+            <span className={diffPercent > DIFF_THRESHOLD_PERCENT ? 'text-red-600 font-bold' : 'text-green-600 font-bold'}>
               {diffPercent}%
             </span>
           </span>
