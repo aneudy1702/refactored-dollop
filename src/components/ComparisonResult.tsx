@@ -68,7 +68,7 @@ export default function ComparisonResult({
           </span>
         </div>
       </div>
-      <div className="overflow-auto max-h-[600px]">
+      <div className="overflow-auto">
         {/* eslint-disable-next-line @next/next/no-img-element */}
         <img src={imgSrc} alt={activeTab} className="w-full" />
       </div>
