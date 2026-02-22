@@ -44,7 +44,7 @@ export async function POST(req: NextRequest) {
       }
     }
 
-    const screenshot = await page.screenshot({ encoding: 'base64', type: 'png' });
+    const screenshot = await page.screenshot({ encoding: 'base64', type: 'png', fullPage: true });
     await browser.close();
 
     return NextResponse.json({ screenshot });

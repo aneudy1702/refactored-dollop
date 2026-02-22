@@ -1,6 +1,6 @@
 'use client';
 
-import { Suspense, useState } from 'react';
+import { Suspense, useState, useCallback } from 'react';
 import { useSearchParams } from 'next/navigation';
 import ActionList from '@/components/ActionList';
 import ComparisonResult from '@/components/ComparisonResult';
@@ -21,6 +21,26 @@ interface CompareResult {
   diffPercent: number;
 }
 
+const BREAKPOINTS = [
+  { id: 'mobile' as const, label: 'Mobile', width: 375, icon: '📱' },
+  { id: 'tablet' as const, label: 'Tablet', width: 768, icon: '📋' },
+  { id: 'desktop' as const, label: 'Desktop', width: 1280, icon: '🖥️' },
+];
+
+type BreakpointId = typeof BREAKPOINTS[number]['id'];
+
+interface BreakpointState {
+  loading: boolean;
+  result: CompareResult | null;
+  error: string | null;
+}
+
+const initialBreakpointStates = (): Record<BreakpointId, BreakpointState> => ({
+  mobile: { loading: false, result: null, error: null },
+  tablet: { loading: false, result: null, error: null },
+  desktop: { loading: false, result: null, error: null },
+});
+
 function CompareContent() {
   const params = useSearchParams();
   const [url1, setUrl1] = useState(params.get('url1') || '');
@@ -30,27 +50,30 @@ function CompareContent() {
     if (!encoded) return [];
     try { return JSON.parse(atob(encoded)); } catch { return []; }
   });
-  const [loading, setLoading] = useState(false);
-  const [error, setError] = useState('');
-  const [result, setResult] = useState<CompareResult | null>(null);
   const [scenarioOpen, setScenarioOpen] = useState(false);
+  const [hasStarted, setHasStarted] = useState(false);
+  const [activeBreakpoint, setActiveBreakpoint] = useState<BreakpointId>('desktop');
+  const [bpStates, setBpStates] = useState<Record<BreakpointId, BreakpointState>>(initialBreakpointStates);
 
-  const handleCompare = async () => {
-    if (!url1 || !url2) return;
-    setLoading(true);
-    setError('');
-    setResult(null);
+  const loadBreakpoint = useCallback(async (
+    bpId: BreakpointId,
+    width: number,
+    currentUrl1: string,
+    currentUrl2: string,
+    currentActions: Action[],
+  ) => {
+    setBpStates(prev => ({ ...prev, [bpId]: { loading: true, result: null, error: null } }));
     try {
       const [r1, r2] = await Promise.all([
         fetch('/api/screenshot', {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({ url: url1, actions }),
+          body: JSON.stringify({ url: currentUrl1, actions: currentActions, width }),
         }).then(r => r.json()),
         fetch('/api/screenshot', {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({ url: url2, actions }),
+          body: JSON.stringify({ url: currentUrl2, actions: currentActions, width }),
         }).then(r => r.json()),
       ]);
 
@@ -65,17 +88,33 @@ function CompareContent() {
 
       if (compareRes.error) throw new Error(compareRes.error);
 
-      setResult({
-        screenshot1: r1.screenshot,
-        screenshot2: r2.screenshot,
-        ...compareRes,
-      });
+      setBpStates(prev => ({
+        ...prev,
+        [bpId]: {
+          loading: false,
+          result: { screenshot1: r1.screenshot, screenshot2: r2.screenshot, ...compareRes },
+          error: null,
+        },
+      }));
     } catch (e: unknown) {
-      setError(e instanceof Error ? e.message : 'Comparison failed');
-    } finally {
-      setLoading(false);
+      setBpStates(prev => ({
+        ...prev,
+        [bpId]: { loading: false, result: null, error: e instanceof Error ? e.message : 'Comparison failed' },
+      }));
+    }
+  }, []);
+
+  const handleCompare = () => {
+    if (!url1 || !url2) return;
+    setHasStarted(true);
+    setBpStates(initialBreakpointStates());
+    for (const bp of BREAKPOINTS) {
+      loadBreakpoint(bp.id, bp.width, url1, url2, actions);
     }
   };
+
+  const anyLoading = BREAKPOINTS.some(bp => bpStates[bp.id].loading);
+  const activeBp = bpStates[activeBreakpoint];
 
   return (
     <div className="max-w-6xl mx-auto px-4 py-8">
@@ -106,10 +145,10 @@ function CompareContent() {
         </div>
         <button
           onClick={handleCompare}
-          disabled={!url1 || !url2 || loading}
+          disabled={!url1 || !url2 || anyLoading}
           className="bg-indigo-600 text-white px-8 py-2 rounded-lg font-semibold hover:bg-indigo-700 disabled:opacity-40 disabled:cursor-not-allowed transition-colors"
         >
-          {loading ? 'Comparing...' : 'Compare'}
+          {anyLoading ? 'Comparing…' : 'Compare'}
         </button>
       </div>
 
@@ -134,28 +173,66 @@ function CompareContent() {
         )}
       </div>
 
-      {loading && (
-        <div className="flex flex-col items-center justify-center py-16">
-          <div className="w-12 h-12 border-4 border-indigo-600 border-t-transparent rounded-full animate-spin mb-4" />
-          <p className="text-gray-600">Taking screenshots and comparing...</p>
-        </div>
-      )}
+      {hasStarted && (
+        <div className="bg-white rounded-xl shadow-md overflow-hidden">
+          {/* Breakpoint selector */}
+          <div className="flex gap-2 p-4 border-b bg-gray-50">
+            {BREAKPOINTS.map(bp => {
+              const state = bpStates[bp.id];
+              const isActive = activeBreakpoint === bp.id;
+              return (
+                <button
+                  key={bp.id}
+                  onClick={() => setActiveBreakpoint(bp.id)}
+                  className={`flex items-center gap-2 px-4 py-2 rounded-lg text-sm font-medium transition-colors ${
+                    isActive
+                      ? 'bg-indigo-600 text-white'
+                      : 'bg-white text-gray-700 border border-gray-200 hover:bg-gray-100'
+                  }`}
+                >
+                  <span>{bp.icon}</span>
+                  <span>{bp.label}</span>
+                  <span className="ml-1">
+                    {state.loading ? (
+                      <span className={`inline-block w-3 h-3 border-2 ${isActive ? 'border-white border-t-transparent' : 'border-indigo-500 border-t-transparent'} rounded-full animate-spin`} />
+                    ) : state.error ? (
+                      <span className="text-red-400">✕</span>
+                    ) : state.result ? (
+                      <span className={state.result.diffPercent > 5 ? 'text-red-400' : 'text-green-400'}>
+                        {state.result.diffPercent > 5 ? '!' : '✓'}
+                      </span>
+                    ) : null}
+                  </span>
+                </button>
+              );
+            })}
+          </div>
 
-      {error && (
-        <div className="bg-red-50 border border-red-200 rounded-lg p-4 mb-6">
-          <p className="text-red-700">{error}</p>
+          {/* Active breakpoint content */}
+          <div className="p-4">
+            {activeBp.loading && (
+              <div className="flex flex-col items-center justify-center py-16">
+                <div className="w-12 h-12 border-4 border-indigo-600 border-t-transparent rounded-full animate-spin mb-4" />
+                <p className="text-gray-600">Taking screenshots at {BREAKPOINTS.find(b => b.id === activeBreakpoint)?.width}px width…</p>
+              </div>
+            )}
+            {activeBp.error && (
+              <div className="bg-red-50 border border-red-200 rounded-lg p-4">
+                <p className="text-red-700">{activeBp.error}</p>
+              </div>
+            )}
+            {activeBp.result && (
+              <ComparisonResult
+                screenshot1={activeBp.result.screenshot1}
+                screenshot2={activeBp.result.screenshot2}
+                diff={activeBp.result.diff}
+                pixelCount={activeBp.result.pixelCount}
+                totalPixels={activeBp.result.totalPixels}
+                diffPercent={activeBp.result.diffPercent}
+              />
+            )}
+          </div>
         </div>
-      )}
-
-      {result && (
-        <ComparisonResult
-          screenshot1={result.screenshot1}
-          screenshot2={result.screenshot2}
-          diff={result.diff}
-          pixelCount={result.pixelCount}
-          totalPixels={result.totalPixels}
-          diffPercent={result.diffPercent}
-        />
       )}
     </div>
   );
