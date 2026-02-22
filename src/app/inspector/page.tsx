@@ -2,8 +2,15 @@
 
 import { useState, useRef } from 'react';
 
-const VIEWPORT_WIDTH = 1280;
 const VIEWPORT_HEIGHT = 800;
+
+const BREAKPOINTS = [
+  { id: 'mobile' as const, label: 'Mobile', width: 375, icon: '📱' },
+  { id: 'tablet' as const, label: 'Tablet', width: 768, icon: '📋' },
+  { id: 'desktop' as const, label: 'Desktop', width: 1280, icon: '🖥️' },
+];
+
+type BreakpointId = typeof BREAKPOINTS[number]['id'];
 
 interface InspectorResult {
   selector: string;
@@ -20,9 +27,10 @@ export default function InspectorPage() {
   const [crosshair, setCrosshair] = useState<{ x: number; y: number } | null>(null);
   const [error, setError] = useState('');
   const [copied, setCopied] = useState(false);
+  const [activeBreakpoint, setActiveBreakpoint] = useState<BreakpointId>('desktop');
   const imgRef = useRef<HTMLImageElement>(null);
 
-  const handleLoad = async () => {
+  const loadScreenshot = async (viewportWidth: number) => {
     if (!url) return;
     setLoading(true);
     setError('');
@@ -33,7 +41,7 @@ export default function InspectorPage() {
       const res = await fetch('/api/screenshot', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ url, width: VIEWPORT_WIDTH, height: VIEWPORT_HEIGHT }),
+        body: JSON.stringify({ url, width: viewportWidth, height: VIEWPORT_HEIGHT }),
       }).then(r => r.json());
       if (res.error) throw new Error(res.error);
       setScreenshot(res.screenshot);
@@ -44,10 +52,24 @@ export default function InspectorPage() {
     }
   };
 
+  const handleLoad = () => {
+    const bp = BREAKPOINTS.find(b => b.id === activeBreakpoint)!;
+    loadScreenshot(bp.width);
+  };
+
+  const handleBreakpointChange = (bpId: BreakpointId) => {
+    setActiveBreakpoint(bpId);
+    if (screenshot) {
+      const bp = BREAKPOINTS.find(b => b.id === bpId)!;
+      loadScreenshot(bp.width);
+    }
+  };
+
   const handleImageClick = async (e: React.MouseEvent<HTMLImageElement>) => {
     if (!imgRef.current || !screenshot) return;
+    const viewportWidth = BREAKPOINTS.find(b => b.id === activeBreakpoint)!.width;
     const rect = imgRef.current.getBoundingClientRect();
-    const scaleX = VIEWPORT_WIDTH / rect.width;
+    const scaleX = viewportWidth / rect.width;
     const scaleY = VIEWPORT_HEIGHT / rect.height;
     const relX = (e.clientX - rect.left) * scaleX;
     const relY = (e.clientY - rect.top) * scaleY;
@@ -63,7 +85,7 @@ export default function InspectorPage() {
       const res = await fetch('/api/inspector', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ url, x: Math.round(relX), y: Math.round(relY), width: VIEWPORT_WIDTH, height: VIEWPORT_HEIGHT }),
+        body: JSON.stringify({ url, x: Math.round(relX), y: Math.round(relY), width: viewportWidth, height: VIEWPORT_HEIGHT }),
       }).then(r => r.json());
       if (res.error) throw new Error(res.error);
       setResult(res);
@@ -87,7 +109,7 @@ export default function InspectorPage() {
       <h1 className="text-3xl font-bold text-gray-800 mb-8">Element Inspector</h1>
 
       <div className="bg-white rounded-xl shadow-md p-6 mb-6">
-        <div className="flex gap-3">
+        <div className="flex gap-3 mb-4">
           <input
             type="url"
             value={url}
@@ -103,6 +125,23 @@ export default function InspectorPage() {
           >
             {loading ? 'Loading...' : 'Load'}
           </button>
+        </div>
+        <div className="flex gap-2">
+          {BREAKPOINTS.map(bp => (
+            <button
+              key={bp.id}
+              onClick={() => handleBreakpointChange(bp.id)}
+              className={`flex items-center gap-2 px-4 py-2 rounded-lg text-sm font-medium transition-colors ${
+                activeBreakpoint === bp.id
+                  ? 'bg-indigo-600 text-white'
+                  : 'bg-white text-gray-700 border border-gray-200 hover:bg-gray-100'
+              }`}
+            >
+              <span>{bp.icon}</span>
+              <span>{bp.label}</span>
+              <span className="ml-1 text-xs opacity-70">{bp.width}px</span>
+            </button>
+          ))}
         </div>
         {screenshot && (
           <p className="text-sm text-gray-500 mt-2">Click anywhere on the screenshot to inspect that element.</p>
