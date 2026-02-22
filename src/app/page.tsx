@@ -64,6 +64,18 @@ export default function HomePage() {
           {/* Other tools */}
           <div className="space-y-4">
             <div className="bg-white rounded-2xl shadow-lg p-8">
+              <h2 className="text-2xl font-bold text-gray-800 mb-2">Batch Compare</h2>
+              <p className="text-gray-500 mb-4 text-sm">
+                Compare many URL pairs at once and see a diff summary for each.
+              </p>
+              <Link
+                href="/batch"
+                className="inline-block bg-indigo-600 text-white px-6 py-2 rounded-lg font-semibold hover:bg-indigo-700 transition-colors"
+              >
+                Batch Compare →
+              </Link>
+            </div>
+            <div className="bg-white rounded-2xl shadow-lg p-8">
               <h2 className="text-2xl font-bold text-gray-800 mb-2">Scenario Builder</h2>
               <p className="text-gray-500 mb-4 text-sm">
                 Define sequences of click/type actions and run them on both sites before comparing.
