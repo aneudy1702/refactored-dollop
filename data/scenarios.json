@@ -1,0 +1,26 @@
+{
+  "collections": [
+    {
+      "id": "1771790746781",
+      "name": "Regression Suite",
+      "description": "Core QA user journey scenarios",
+      "createdAt": "2026-02-22T20:05:46.781Z"
+    }
+  ],
+  "scenarios": [
+    {
+      "id": "1771790766211",
+      "name": "Footnotes Click Test",
+      "url1": "https://staging.example.com",
+      "url2": "https://production.example.com",
+      "actions": [
+        {
+          "type": "click",
+          "selector": "#footnote-toggle"
+        }
+      ],
+      "collectionId": "1771790746781",
+      "createdAt": "2026-02-22T20:06:06.211Z"
+    }
+  ]
+}
