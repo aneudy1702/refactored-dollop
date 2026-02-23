@@ -2,6 +2,7 @@
 
 import { useState, useCallback } from 'react';
 import ComparisonResult from '@/components/ComparisonResult';
+import UrlBulkImport from '@/components/UrlBulkImport';
 
 interface UrlPair {
   id: string;
@@ -126,6 +127,16 @@ export default function BatchComparePage() {
     setRunning(false);
   };
 
+  const handleBulkImport = (imported: { label: string; url1: string; url2: string }[]) => {
+    const newPairs = imported.map(p => ({ ...emptyPair(), ...p }));
+    setPairs(prev => {
+      // Replace the single empty default pair if it's the only one and still empty
+      const isDefaultEmpty =
+        prev.length === 1 && !prev[0].label && !prev[0].url1 && !prev[0].url2;
+      return isDefaultEmpty ? newPairs : [...prev, ...newPairs];
+    });
+  };
+
   const validCount = pairs.filter(p => p.url1 && p.url2).length;
 
   return (
@@ -138,6 +149,7 @@ export default function BatchComparePage() {
           </p>
         </div>
         <div className="flex gap-3">
+          <UrlBulkImport onImport={handleBulkImport} disabled={running} />
           <button
             onClick={addPair}
             disabled={running}
