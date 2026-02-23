@@ -167,6 +167,20 @@ export default function BatchComparePage() {
         </div>
       </div>
 
+      <div className="bg-indigo-50 border border-indigo-100 rounded-xl px-5 py-4 mb-6 text-sm text-indigo-800">
+        <p className="font-semibold mb-1">How to add URL pairs</p>
+        <ul className="list-disc list-inside space-y-1 text-indigo-700">
+          <li>
+            <strong>Manually:</strong> click <strong>+ Add Pair</strong> to enter one pair at a time.
+          </li>
+          <li>
+            <strong>Bulk import:</strong> click <strong>Import URLs</strong> to paste a list or upload a{' '}
+            <code className="bg-indigo-100 px-1 rounded">.txt</code> file. Put one URL per line —
+            consecutive lines form a pair (line 1 → Site 1, line 2 → Site 2, and so on).
+          </li>
+        </ul>
+      </div>
+
       <div className="space-y-4">
         {pairs.map((pair, idx) => {
           const state = states[pair.id];
