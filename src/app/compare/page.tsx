@@ -118,28 +118,28 @@ function CompareContent() {
 
   return (
     <div className="max-w-6xl mx-auto px-4 py-8">
-      <h1 className="text-3xl font-bold text-gray-800 mb-8">Compare Sites</h1>
+      <h1 className="text-3xl font-bold text-gray-800 dark:text-gray-100 mb-8">Compare Sites</h1>
 
-      <div className="bg-white rounded-xl shadow-md p-6 mb-6">
+      <div className="bg-white dark:bg-gray-800 rounded-xl shadow-md p-6 mb-6">
         <div className="grid md:grid-cols-2 gap-4 mb-4">
           <div>
-            <label className="block text-sm font-medium text-gray-700 mb-1">Site 1 URL</label>
+            <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">Site 1 URL</label>
             <input
               type="url"
               value={url1}
               onChange={e => setUrl1(e.target.value)}
               placeholder="https://example.com"
-              className="w-full border border-gray-300 rounded-lg px-4 py-2 focus:outline-none focus:ring-2 focus:ring-indigo-500"
+              className="w-full border border-gray-300 dark:border-gray-600 rounded-lg px-4 py-2 bg-white dark:bg-gray-700 text-gray-900 dark:text-gray-100 placeholder-gray-400 dark:placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-indigo-500"
             />
           </div>
           <div>
-            <label className="block text-sm font-medium text-gray-700 mb-1">Site 2 URL</label>
+            <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">Site 2 URL</label>
             <input
               type="url"
               value={url2}
               onChange={e => setUrl2(e.target.value)}
               placeholder="https://example.org"
-              className="w-full border border-gray-300 rounded-lg px-4 py-2 focus:outline-none focus:ring-2 focus:ring-indigo-500"
+              className="w-full border border-gray-300 dark:border-gray-600 rounded-lg px-4 py-2 bg-white dark:bg-gray-700 text-gray-900 dark:text-gray-100 placeholder-gray-400 dark:placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-indigo-500"
             />
           </div>
         </div>
@@ -153,19 +153,19 @@ function CompareContent() {
       </div>
 
       {/* Scenario section */}
-      <div className="bg-white rounded-xl shadow-md p-6 mb-6">
+      <div className="bg-white dark:bg-gray-800 rounded-xl shadow-md p-6 mb-6">
         <button
           onClick={() => setScenarioOpen(!scenarioOpen)}
           className="flex items-center justify-between w-full text-left"
         >
-          <h2 className="text-lg font-semibold text-gray-800">
+          <h2 className="text-lg font-semibold text-gray-800 dark:text-gray-100">
             Scenario Actions {actions.length > 0 ? `(${actions.length})` : ''}
           </h2>
-          <span className="text-gray-400 text-xl">{scenarioOpen ? '▲' : '▼'}</span>
+          <span className="text-gray-400 dark:text-gray-500 text-xl">{scenarioOpen ? '▲' : '▼'}</span>
         </button>
         {scenarioOpen && (
           <div className="mt-4">
-            <p className="text-sm text-gray-500 mb-4">
+            <p className="text-sm text-gray-500 dark:text-gray-400 mb-4">
               Actions are executed on both sites before taking screenshots.
             </p>
             <ActionList actions={actions} onChange={setActions} />
@@ -174,9 +174,9 @@ function CompareContent() {
       </div>
 
       {hasStarted && (
-        <div className="bg-white rounded-xl shadow-md overflow-hidden">
+        <div className="bg-white dark:bg-gray-800 rounded-xl shadow-md overflow-hidden">
           {/* Breakpoint selector */}
-          <div className="flex gap-2 p-4 border-b bg-gray-50">
+          <div className="flex gap-2 p-4 border-b border-gray-200 dark:border-gray-700 bg-gray-50 dark:bg-gray-700/50">
             {BREAKPOINTS.map(bp => {
               const state = bpStates[bp.id];
               const isActive = activeBreakpoint === bp.id;
@@ -187,7 +187,7 @@ function CompareContent() {
                   className={`flex items-center gap-2 px-4 py-2 rounded-lg text-sm font-medium transition-colors ${
                     isActive
                       ? 'bg-indigo-600 text-white'
-                      : 'bg-white text-gray-700 border border-gray-200 hover:bg-gray-100'
+                      : 'bg-white dark:bg-gray-700 text-gray-700 dark:text-gray-300 border border-gray-200 dark:border-gray-600 hover:bg-gray-100 dark:hover:bg-gray-600'
                   }`}
                 >
                   <span>{bp.icon}</span>
@@ -213,12 +213,12 @@ function CompareContent() {
             {activeBp.loading && (
               <div className="flex flex-col items-center justify-center py-16">
                 <div className="w-12 h-12 border-4 border-indigo-600 border-t-transparent rounded-full animate-spin mb-4" />
-                <p className="text-gray-600">Taking screenshots at {BREAKPOINTS.find(b => b.id === activeBreakpoint)?.width}px width…</p>
+                <p className="text-gray-600 dark:text-gray-400">Taking screenshots at {BREAKPOINTS.find(b => b.id === activeBreakpoint)?.width}px width…</p>
               </div>
             )}
             {activeBp.error && (
-              <div className="bg-red-50 border border-red-200 rounded-lg p-4">
-                <p className="text-red-700">{activeBp.error}</p>
+              <div className="bg-red-50 dark:bg-red-950/30 border border-red-200 dark:border-red-900 rounded-lg p-4">
+                <p className="text-red-700 dark:text-red-400">{activeBp.error}</p>
               </div>
             )}
             {activeBp.result && (
@@ -240,7 +240,7 @@ function CompareContent() {
 
 export default function ComparePage() {
   return (
-    <Suspense fallback={<div className="p-8 text-gray-500">Loading...</div>}>
+    <Suspense fallback={<div className="p-8 text-gray-500 dark:text-gray-400">Loading...</div>}>
       <CompareContent />
     </Suspense>
   );

@@ -1,6 +1,6 @@
 'use client';
 
-import { useState, useRef } from 'react';
+import { useState, useRef, useEffect } from 'react';
 
 interface UrlPairInput {
   label: string;
@@ -64,6 +64,19 @@ export default function UrlBulkImport({ onImport, disabled }: UrlBulkImportProps
     setOpen(false);
   };
 
+  // Close on Escape key
+  useEffect(() => {
+    if (!open) return;
+    const onKeyDown = (e: KeyboardEvent) => { if (e.key === 'Escape') handleCancel(); };
+    document.addEventListener('keydown', onKeyDown);
+    return () => document.removeEventListener('keydown', onKeyDown);
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [open]);
+
+  const handleBackdropClick = (e: React.MouseEvent<HTMLDivElement>) => {
+    if (e.target === e.currentTarget) handleCancel();
+  };
+
   return (
     <>
       <button
@@ -80,7 +93,7 @@ export default function UrlBulkImport({ onImport, disabled }: UrlBulkImportProps
           role="dialog"
           aria-modal="true"
           aria-label="Bulk Import URL Pairs"
-          onClick={e => { if (e.target === e.currentTarget) handleCancel(); }}
+          onClick={handleBackdropClick}
         >
           <div className="bg-white dark:bg-gray-800 rounded-2xl shadow-2xl w-full max-w-xl mx-4 p-6">
             <h2 className="text-lg font-semibold text-gray-800 dark:text-gray-100 mb-2">

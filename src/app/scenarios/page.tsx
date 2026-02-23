@@ -156,7 +156,7 @@ export default function ScenariosPage() {
   return (
     <div className="max-w-5xl mx-auto px-4 py-8">
       <div className="flex items-center justify-between mb-8">
-        <h1 className="text-3xl font-bold text-gray-800">Scenarios</h1>
+        <h1 className="text-3xl font-bold text-gray-800 dark:text-gray-100">Scenarios</h1>
         <div className="flex gap-3">
           <button
             onClick={() => { setShowCollectionForm(true); setEditingCollectionId(null); setCollectionForm(EMPTY_COLLECTION_FORM); }}
@@ -175,30 +175,30 @@ export default function ScenariosPage() {
 
       {/* Collection form */}
       {showCollectionForm && (
-        <div className="bg-white rounded-xl shadow-md p-6 mb-6 border-l-4 border-purple-500">
-          <h2 className="text-xl font-semibold mb-4">{editingCollectionId ? 'Edit' : 'New'} Collection</h2>
+        <div className="bg-white dark:bg-gray-800 rounded-xl shadow-md p-6 mb-6 border-l-4 border-purple-500">
+          <h2 className="text-xl font-semibold text-gray-800 dark:text-gray-100 mb-4">{editingCollectionId ? 'Edit' : 'New'} Collection</h2>
           <div className="space-y-4">
             <div>
-              <label className="block text-sm font-medium text-gray-700 mb-1">Name</label>
+              <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">Name</label>
               <input
                 value={collectionForm.name}
                 onChange={e => setCollectionForm({ ...collectionForm, name: e.target.value })}
                 placeholder="Regression Suite"
-                className="w-full border border-gray-300 rounded-lg px-4 py-2 focus:outline-none focus:ring-2 focus:ring-purple-500"
+                className="w-full border border-gray-300 dark:border-gray-600 rounded-lg px-4 py-2 bg-white dark:bg-gray-700 text-gray-900 dark:text-gray-100 placeholder-gray-400 dark:placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-purple-500"
               />
             </div>
             <div>
-              <label className="block text-sm font-medium text-gray-700 mb-1">Description</label>
+              <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">Description</label>
               <input
                 value={collectionForm.description}
                 onChange={e => setCollectionForm({ ...collectionForm, description: e.target.value })}
                 placeholder="Optional description"
-                className="w-full border border-gray-300 rounded-lg px-4 py-2 focus:outline-none focus:ring-2 focus:ring-purple-500"
+                className="w-full border border-gray-300 dark:border-gray-600 rounded-lg px-4 py-2 bg-white dark:bg-gray-700 text-gray-900 dark:text-gray-100 placeholder-gray-400 dark:placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-purple-500"
               />
             </div>
             <div className="flex gap-3">
               <button onClick={handleSaveCollection} className="bg-purple-600 text-white px-6 py-2 rounded-lg font-semibold hover:bg-purple-700 transition-colors">Save</button>
-              <button onClick={() => { setShowCollectionForm(false); setEditingCollectionId(null); }} className="bg-gray-100 text-gray-700 px-6 py-2 rounded-lg font-semibold hover:bg-gray-200 transition-colors">Cancel</button>
+              <button onClick={() => { setShowCollectionForm(false); setEditingCollectionId(null); }} className="bg-gray-100 dark:bg-gray-700 text-gray-700 dark:text-gray-300 px-6 py-2 rounded-lg font-semibold hover:bg-gray-200 dark:hover:bg-gray-600 transition-colors">Cancel</button>
             </div>
           </div>
         </div>
@@ -206,24 +206,24 @@ export default function ScenariosPage() {
 
       {/* Scenario form */}
       {showScenarioForm && (
-        <div className="bg-white rounded-xl shadow-md p-6 mb-6 border-l-4 border-indigo-500">
-          <h2 className="text-xl font-semibold mb-4">{editingScenarioId ? 'Edit' : 'New'} Scenario</h2>
+        <div className="bg-white dark:bg-gray-800 rounded-xl shadow-md p-6 mb-6 border-l-4 border-indigo-500">
+          <h2 className="text-xl font-semibold text-gray-800 dark:text-gray-100 mb-4">{editingScenarioId ? 'Edit' : 'New'} Scenario</h2>
           <div className="space-y-4">
             <div>
-              <label className="block text-sm font-medium text-gray-700 mb-1">Name</label>
+              <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">Name</label>
               <input
                 value={scenarioForm.name}
                 onChange={e => setScenarioForm({ ...scenarioForm, name: e.target.value })}
                 placeholder="My scenario"
-                className="w-full border border-gray-300 rounded-lg px-4 py-2 focus:outline-none focus:ring-2 focus:ring-indigo-500"
+                className="w-full border border-gray-300 dark:border-gray-600 rounded-lg px-4 py-2 bg-white dark:bg-gray-700 text-gray-900 dark:text-gray-100 placeholder-gray-400 dark:placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-indigo-500"
               />
             </div>
             <div>
-              <label className="block text-sm font-medium text-gray-700 mb-1">Collection</label>
+              <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">Collection</label>
               <select
                 value={scenarioForm.collectionId}
                 onChange={e => setScenarioForm({ ...scenarioForm, collectionId: e.target.value })}
-                className="w-full border border-gray-300 rounded-lg px-4 py-2 focus:outline-none focus:ring-2 focus:ring-indigo-500 bg-white"
+                className="w-full border border-gray-300 dark:border-gray-600 rounded-lg px-4 py-2 bg-white dark:bg-gray-700 text-gray-900 dark:text-gray-100 focus:outline-none focus:ring-2 focus:ring-indigo-500"
               >
                 <option value="">— No collection —</option>
                 {collections.map(c => (
@@ -233,70 +233,70 @@ export default function ScenariosPage() {
             </div>
             <div className="grid md:grid-cols-2 gap-4">
               <div>
-                <label className="block text-sm font-medium text-gray-700 mb-1">Site 1 URL</label>
+                <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">Site 1 URL</label>
                 <input
                   type="url"
                   value={scenarioForm.url1}
                   onChange={e => setScenarioForm({ ...scenarioForm, url1: e.target.value })}
                   placeholder="https://example.com"
-                  className="w-full border border-gray-300 rounded-lg px-4 py-2 focus:outline-none focus:ring-2 focus:ring-indigo-500"
+                  className="w-full border border-gray-300 dark:border-gray-600 rounded-lg px-4 py-2 bg-white dark:bg-gray-700 text-gray-900 dark:text-gray-100 placeholder-gray-400 dark:placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-indigo-500"
                 />
               </div>
               <div>
-                <label className="block text-sm font-medium text-gray-700 mb-1">Site 2 URL</label>
+                <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">Site 2 URL</label>
                 <input
                   type="url"
                   value={scenarioForm.url2}
                   onChange={e => setScenarioForm({ ...scenarioForm, url2: e.target.value })}
                   placeholder="https://example.org"
-                  className="w-full border border-gray-300 rounded-lg px-4 py-2 focus:outline-none focus:ring-2 focus:ring-indigo-500"
+                  className="w-full border border-gray-300 dark:border-gray-600 rounded-lg px-4 py-2 bg-white dark:bg-gray-700 text-gray-900 dark:text-gray-100 placeholder-gray-400 dark:placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-indigo-500"
                 />
               </div>
             </div>
             <div>
-              <label className="block text-sm font-medium text-gray-700 mb-2">Actions</label>
+              <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">Actions</label>
               <ActionList actions={scenarioForm.actions} onChange={a => setScenarioForm({ ...scenarioForm, actions: a })} />
             </div>
             <div className="flex gap-3">
               <button onClick={handleSaveScenario} className="bg-indigo-600 text-white px-6 py-2 rounded-lg font-semibold hover:bg-indigo-700 transition-colors">Save</button>
-              <button onClick={() => { setShowScenarioForm(false); setEditingScenarioId(null); }} className="bg-gray-100 text-gray-700 px-6 py-2 rounded-lg font-semibold hover:bg-gray-200 transition-colors">Cancel</button>
+              <button onClick={() => { setShowScenarioForm(false); setEditingScenarioId(null); }} className="bg-gray-100 dark:bg-gray-700 text-gray-700 dark:text-gray-300 px-6 py-2 rounded-lg font-semibold hover:bg-gray-200 dark:hover:bg-gray-600 transition-colors">Cancel</button>
             </div>
           </div>
         </div>
       )}
 
       {loading ? (
-        <div className="text-center py-16 text-gray-400">Loading…</div>
+        <div className="text-center py-16 text-gray-400 dark:text-gray-500">Loading…</div>
       ) : (
         <div className="flex gap-6">
           {/* Collections sidebar */}
           <div className="w-56 flex-shrink-0">
-            <h2 className="text-xs font-semibold text-gray-500 uppercase tracking-wider mb-3">Collections</h2>
+            <h2 className="text-xs font-semibold text-gray-500 dark:text-gray-400 uppercase tracking-wider mb-3">Collections</h2>
             <div className="space-y-1">
               <button
                 onClick={() => setActiveCollectionId('')}
-                className={`w-full text-left px-3 py-2 rounded-lg text-sm font-medium transition-colors ${activeCollectionId === '' ? 'bg-indigo-100 text-indigo-700' : 'text-gray-600 hover:bg-gray-100'}`}
+                className={`w-full text-left px-3 py-2 rounded-lg text-sm font-medium transition-colors ${activeCollectionId === '' ? 'bg-indigo-100 dark:bg-indigo-900/50 text-indigo-700 dark:text-indigo-300' : 'text-gray-600 dark:text-gray-400 hover:bg-gray-100 dark:hover:bg-gray-700/50'}`}
               >
                 All Scenarios
-                <span className="ml-1 text-xs text-gray-400">({scenarios.length})</span>
+                <span className="ml-1 text-xs text-gray-400 dark:text-gray-500">({scenarios.length})</span>
               </button>
               {collections.map(c => (
                 <div key={c.id} className="group relative">
                   <button
                     onClick={() => setActiveCollectionId(c.id)}
-                    className={`w-full text-left px-3 py-2 rounded-lg text-sm font-medium transition-colors pr-16 ${activeCollectionId === c.id ? 'bg-purple-100 text-purple-700' : 'text-gray-600 hover:bg-gray-100'}`}
+                    className={`w-full text-left px-3 py-2 rounded-lg text-sm font-medium transition-colors pr-16 ${activeCollectionId === c.id ? 'bg-purple-100 dark:bg-purple-900/40 text-purple-700 dark:text-purple-300' : 'text-gray-600 dark:text-gray-400 hover:bg-gray-100 dark:hover:bg-gray-700/50'}`}
                   >
                     {c.name}
-                    <span className="ml-1 text-xs text-gray-400">({scenarios.filter(s => s.collectionId === c.id).length})</span>
+                    <span className="ml-1 text-xs text-gray-400 dark:text-gray-500">({scenarios.filter(s => s.collectionId === c.id).length})</span>
                   </button>
                   <div className="absolute right-1 top-1.5 hidden group-hover:flex gap-1">
-                    <button onClick={() => handleEditCollection(c)} className="text-gray-400 hover:text-indigo-600 p-0.5 text-xs" title="Edit">✏️</button>
-                    <button onClick={() => handleDeleteCollection(c.id)} className="text-gray-400 hover:text-red-600 p-0.5 text-xs" title="Delete">🗑️</button>
+                    <button onClick={() => handleEditCollection(c)} className="text-gray-400 hover:text-indigo-600 dark:hover:text-indigo-400 p-0.5 text-xs" title="Edit">✏️</button>
+                    <button onClick={() => handleDeleteCollection(c.id)} className="text-gray-400 hover:text-red-600 dark:hover:text-red-400 p-0.5 text-xs" title="Delete">🗑️</button>
                   </div>
                 </div>
               ))}
               {collections.length === 0 && (
-                <p className="text-xs text-gray-400 px-3 py-2">No collections yet.</p>
+                <p className="text-xs text-gray-400 dark:text-gray-500 px-3 py-2">No collections yet.</p>
               )}
             </div>
           </div>
@@ -304,7 +304,7 @@ export default function ScenariosPage() {
           {/* Scenarios list */}
           <div className="flex-1">
             {visibleScenarios.length === 0 ? (
-              <div className="text-center py-16 text-gray-400">
+              <div className="text-center py-16 text-gray-400 dark:text-gray-500">
                 <p className="text-xl">No scenarios yet.</p>
                 <p className="text-sm mt-2">Create one to save URL pairs and action sequences.</p>
               </div>
@@ -313,23 +313,23 @@ export default function ScenariosPage() {
                 {visibleScenarios.map(s => {
                   const col = collections.find(c => c.id === s.collectionId);
                   return (
-                    <div key={s.id} className="bg-white rounded-xl shadow-md p-6">
+                    <div key={s.id} className="bg-white dark:bg-gray-800 rounded-xl shadow-md p-6">
                       <div className="flex items-start justify-between">
                         <div>
-                          <h3 className="text-lg font-semibold text-gray-800">{s.name}</h3>
+                          <h3 className="text-lg font-semibold text-gray-800 dark:text-gray-100">{s.name}</h3>
                           {col && (
-                            <span className="inline-block text-xs bg-purple-100 text-purple-700 px-2 py-0.5 rounded-full font-medium mt-1 mb-1">{col.name}</span>
+                            <span className="inline-block text-xs bg-purple-100 dark:bg-purple-900/40 text-purple-700 dark:text-purple-300 px-2 py-0.5 rounded-full font-medium mt-1 mb-1">{col.name}</span>
                           )}
-                          <p className="text-sm text-gray-500 mt-1">{s.url1}</p>
-                          <p className="text-sm text-gray-500">{s.url2}</p>
+                          <p className="text-sm text-gray-500 dark:text-gray-400 mt-1">{s.url1}</p>
+                          <p className="text-sm text-gray-500 dark:text-gray-400">{s.url2}</p>
                           {s.actions.length > 0 && (
-                            <p className="text-xs text-indigo-600 mt-1">{s.actions.length} action(s)</p>
+                            <p className="text-xs text-indigo-600 dark:text-indigo-400 mt-1">{s.actions.length} action(s)</p>
                           )}
                         </div>
                         <div className="flex gap-2">
                           <button onClick={() => handleRunScenario(s)} className="bg-green-600 text-white px-4 py-1.5 rounded-lg text-sm font-medium hover:bg-green-700 transition-colors">Run</button>
-                          <button onClick={() => handleEditScenario(s)} className="bg-gray-100 text-gray-700 px-4 py-1.5 rounded-lg text-sm font-medium hover:bg-gray-200 transition-colors">Edit</button>
-                          <button onClick={() => handleDeleteScenario(s.id)} className="bg-red-50 text-red-600 px-4 py-1.5 rounded-lg text-sm font-medium hover:bg-red-100 transition-colors">Delete</button>
+                          <button onClick={() => handleEditScenario(s)} className="bg-gray-100 dark:bg-gray-700 text-gray-700 dark:text-gray-300 px-4 py-1.5 rounded-lg text-sm font-medium hover:bg-gray-200 dark:hover:bg-gray-600 transition-colors">Edit</button>
+                          <button onClick={() => handleDeleteScenario(s.id)} className="bg-red-50 dark:bg-red-950/30 text-red-600 dark:text-red-400 px-4 py-1.5 rounded-lg text-sm font-medium hover:bg-red-100 dark:hover:bg-red-950/50 transition-colors">Delete</button>
                         </div>
                       </div>
                     </div>
