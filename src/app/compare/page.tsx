@@ -1,6 +1,6 @@
 'use client';
 
-import { Suspense, useState, useCallback } from 'react';
+import { Suspense, useState, useCallback, useEffect } from 'react';
 import { useSearchParams } from 'next/navigation';
 import ActionList from '@/components/ActionList';
 import ComparisonResult from '@/components/ComparisonResult';
@@ -112,6 +112,24 @@ function CompareContent() {
       loadBreakpoint(bp.id, bp.width, url1, url2, actions);
     }
   };
+
+  // Auto-run comparison when navigated from a scenario with URL params
+  useEffect(() => {
+    const p1 = params.get('url1');
+    const p2 = params.get('url2');
+    if (!p1 || !p2) return;
+    const encoded = params.get('actions');
+    const initialActions: Action[] = (() => {
+      if (!encoded) return [];
+      try { return JSON.parse(atob(encoded)); } catch { return []; }
+    })();
+    setHasStarted(true);
+    for (const bp of BREAKPOINTS) {
+      loadBreakpoint(bp.id, bp.width, p1, p2, initialActions);
+    }
+  // loadBreakpoint and params are stable on mount; run once to auto-start scenario
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [loadBreakpoint, params]);
 
   const anyLoading = BREAKPOINTS.some(bp => bpStates[bp.id].loading);
   const activeBp = bpStates[activeBreakpoint];
