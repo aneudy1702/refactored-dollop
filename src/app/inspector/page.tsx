@@ -106,16 +106,16 @@ export default function InspectorPage() {
 
   return (
     <div className="max-w-6xl mx-auto px-4 py-8">
-      <h1 className="text-3xl font-bold text-gray-800 mb-8">Element Inspector</h1>
+      <h1 className="text-3xl font-bold text-gray-800 dark:text-gray-100 mb-8">Element Inspector</h1>
 
-      <div className="bg-white rounded-xl shadow-md p-6 mb-6">
+      <div className="bg-white dark:bg-gray-800 rounded-xl shadow-md p-6 mb-6">
         <div className="flex gap-3 mb-4">
           <input
             type="url"
             value={url}
             onChange={e => setUrl(e.target.value)}
             placeholder="https://example.com"
-            className="flex-1 border border-gray-300 rounded-lg px-4 py-2 focus:outline-none focus:ring-2 focus:ring-indigo-500"
+            className="flex-1 border border-gray-300 dark:border-gray-600 rounded-lg px-4 py-2 bg-white dark:bg-gray-700 text-gray-900 dark:text-gray-100 placeholder-gray-400 dark:placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-indigo-500"
             onKeyDown={e => e.key === 'Enter' && handleLoad()}
           />
           <button
@@ -134,7 +134,7 @@ export default function InspectorPage() {
               className={`flex items-center gap-2 px-4 py-2 rounded-lg text-sm font-medium transition-colors ${
                 activeBreakpoint === bp.id
                   ? 'bg-indigo-600 text-white'
-                  : 'bg-white text-gray-700 border border-gray-200 hover:bg-gray-100'
+                  : 'bg-white dark:bg-gray-700 text-gray-700 dark:text-gray-300 border border-gray-200 dark:border-gray-600 hover:bg-gray-100 dark:hover:bg-gray-600'
               }`}
             >
               <span>{bp.icon}</span>
@@ -144,27 +144,27 @@ export default function InspectorPage() {
           ))}
         </div>
         {screenshot && (
-          <p className="text-sm text-gray-500 mt-2">Click anywhere on the screenshot to inspect that element.</p>
+          <p className="text-sm text-gray-500 dark:text-gray-400 mt-2">Click anywhere on the screenshot to inspect that element.</p>
         )}
       </div>
 
       {error && (
-        <div className="bg-red-50 border border-red-200 rounded-lg p-4 mb-6">
-          <p className="text-red-700">{error}</p>
+        <div className="bg-red-50 dark:bg-red-950/30 border border-red-200 dark:border-red-900 rounded-lg p-4 mb-6">
+          <p className="text-red-700 dark:text-red-400">{error}</p>
         </div>
       )}
 
       {loading && (
         <div className="flex flex-col items-center justify-center py-16">
           <div className="w-12 h-12 border-4 border-indigo-600 border-t-transparent rounded-full animate-spin mb-4" />
-          <p className="text-gray-600">Loading screenshot...</p>
+          <p className="text-gray-600 dark:text-gray-400">Loading screenshot...</p>
         </div>
       )}
 
       {screenshot && (
         <div className="grid md:grid-cols-3 gap-6">
           <div className="md:col-span-2">
-            <div className="bg-white rounded-xl shadow-md overflow-hidden relative">
+            <div className="bg-white dark:bg-gray-800 rounded-xl shadow-md overflow-hidden relative">
               <div className="relative" style={{ cursor: inspecting ? 'wait' : 'crosshair' }}>
                 {/* eslint-disable-next-line @next/next/no-img-element */}
                 <img
@@ -187,29 +187,29 @@ export default function InspectorPage() {
             </div>
           </div>
           <div>
-            <div className="bg-white rounded-xl shadow-md p-6 sticky top-4">
-              <h2 className="text-lg font-semibold text-gray-800 mb-4">Inspector</h2>
+            <div className="bg-white dark:bg-gray-800 rounded-xl shadow-md p-6 sticky top-4">
+              <h2 className="text-lg font-semibold text-gray-800 dark:text-gray-100 mb-4">Inspector</h2>
               {inspecting && (
-                <div className="flex items-center gap-2 text-indigo-600">
-                  <div className="w-4 h-4 border-2 border-indigo-600 border-t-transparent rounded-full animate-spin" />
+                <div className="flex items-center gap-2 text-indigo-600 dark:text-indigo-400">
+                  <div className="w-4 h-4 border-2 border-indigo-600 dark:border-indigo-400 border-t-transparent rounded-full animate-spin" />
                   <span className="text-sm">Inspecting...</span>
                 </div>
               )}
               {result && (
                 <div className="space-y-3">
                   <div>
-                    <label className="text-xs font-medium text-gray-500 uppercase tracking-wide">Tag</label>
-                    <p className="text-gray-800 font-mono text-sm mt-1">{result.tagName}</p>
+                    <label className="text-xs font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wide">Tag</label>
+                    <p className="text-gray-800 dark:text-gray-200 font-mono text-sm mt-1">{result.tagName}</p>
                   </div>
                   <div>
-                    <label className="text-xs font-medium text-gray-500 uppercase tracking-wide">CSS Selector</label>
+                    <label className="text-xs font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wide">CSS Selector</label>
                     <div className="flex items-start gap-2 mt-1">
-                      <code className="flex-1 text-xs bg-gray-50 border border-gray-200 rounded px-2 py-1.5 break-all font-mono text-indigo-700">
+                      <code className="flex-1 text-xs bg-gray-50 dark:bg-gray-700 border border-gray-200 dark:border-gray-600 rounded px-2 py-1.5 break-all font-mono text-indigo-700 dark:text-indigo-400">
                         {result.selector}
                       </code>
                       <button
                         onClick={handleCopy}
-                        className="shrink-0 text-xs bg-indigo-100 text-indigo-700 px-3 py-1.5 rounded hover:bg-indigo-200 transition-colors"
+                        className="shrink-0 text-xs bg-indigo-100 dark:bg-indigo-900/50 text-indigo-700 dark:text-indigo-300 px-3 py-1.5 rounded hover:bg-indigo-200 dark:hover:bg-indigo-900 transition-colors"
                       >
                         {copied ? '✓' : 'Copy'}
                       </button>
@@ -217,14 +217,14 @@ export default function InspectorPage() {
                   </div>
                   {result.innerText && (
                     <div>
-                      <label className="text-xs font-medium text-gray-500 uppercase tracking-wide">Text</label>
-                      <p className="text-gray-700 text-sm mt-1 line-clamp-3">{result.innerText}</p>
+                      <label className="text-xs font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wide">Text</label>
+                      <p className="text-gray-700 dark:text-gray-300 text-sm mt-1 line-clamp-3">{result.innerText}</p>
                     </div>
                   )}
                 </div>
               )}
               {!result && !inspecting && (
-                <p className="text-gray-400 text-sm">Click on the screenshot to inspect an element.</p>
+                <p className="text-gray-400 dark:text-gray-500 text-sm">Click on the screenshot to inspect an element.</p>
               )}
             </div>
           </div>

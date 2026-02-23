@@ -28,11 +28,11 @@ export default function ActionList({ actions, onChange }: ActionListProps) {
   return (
     <div className="space-y-2">
       {actions.map((action, i) => (
-        <div key={i} className="flex gap-2 items-center bg-gray-50 rounded p-2">
+        <div key={i} className="flex gap-2 items-center bg-gray-50 dark:bg-gray-700/50 rounded p-2">
           <select
             value={action.type}
             onChange={e => updateAction(i, { type: e.target.value as Action['type'] })}
-            className="border rounded px-2 py-1 text-sm bg-white"
+            className="border border-gray-300 dark:border-gray-600 rounded px-2 py-1 text-sm bg-white dark:bg-gray-700 text-gray-900 dark:text-gray-100"
           >
             <option value="click">Click</option>
             <option value="type">Type</option>
@@ -43,14 +43,14 @@ export default function ActionList({ actions, onChange }: ActionListProps) {
               placeholder="CSS selector"
               value={action.selector || ''}
               onChange={e => updateAction(i, { selector: e.target.value })}
-              className="border rounded px-2 py-1 text-sm flex-1"
+              className="border border-gray-300 dark:border-gray-600 rounded px-2 py-1 text-sm flex-1 bg-white dark:bg-gray-700 text-gray-900 dark:text-gray-100 placeholder-gray-400 dark:placeholder-gray-500"
             />
           ) : (
             <input
               placeholder="Selector (optional)"
               value={action.selector || ''}
               onChange={e => updateAction(i, { selector: e.target.value })}
-              className="border rounded px-2 py-1 text-sm flex-1"
+              className="border border-gray-300 dark:border-gray-600 rounded px-2 py-1 text-sm flex-1 bg-white dark:bg-gray-700 text-gray-900 dark:text-gray-100 placeholder-gray-400 dark:placeholder-gray-500"
             />
           )}
           {action.type === 'type' && (
@@ -58,7 +58,7 @@ export default function ActionList({ actions, onChange }: ActionListProps) {
               placeholder="Text to type"
               value={action.value || ''}
               onChange={e => updateAction(i, { value: e.target.value })}
-              className="border rounded px-2 py-1 text-sm flex-1"
+              className="border border-gray-300 dark:border-gray-600 rounded px-2 py-1 text-sm flex-1 bg-white dark:bg-gray-700 text-gray-900 dark:text-gray-100 placeholder-gray-400 dark:placeholder-gray-500"
             />
           )}
           {action.type === 'wait' && (
@@ -67,7 +67,7 @@ export default function ActionList({ actions, onChange }: ActionListProps) {
               type="number"
               value={action.delay || ''}
               onChange={e => updateAction(i, { delay: parseInt(e.target.value) || 0 })}
-              className="border rounded px-2 py-1 text-sm w-28"
+              className="border border-gray-300 dark:border-gray-600 rounded px-2 py-1 text-sm w-28 bg-white dark:bg-gray-700 text-gray-900 dark:text-gray-100 placeholder-gray-400 dark:placeholder-gray-500"
             />
           )}
           <button
@@ -80,7 +80,7 @@ export default function ActionList({ actions, onChange }: ActionListProps) {
       ))}
       <button
         onClick={addAction}
-        className="mt-1 text-sm text-indigo-600 hover:text-indigo-800 font-medium flex items-center gap-1"
+        className="mt-1 text-sm text-indigo-600 dark:text-indigo-400 hover:text-indigo-800 dark:hover:text-indigo-300 font-medium flex items-center gap-1"
       >
         + Add Action
       </button>

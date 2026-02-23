@@ -2,6 +2,7 @@
 
 import { useState, useCallback } from 'react';
 import ComparisonResult from '@/components/ComparisonResult';
+import UrlBulkImport from '@/components/UrlBulkImport';
 
 interface UrlPair {
   id: string;
@@ -126,22 +127,33 @@ export default function BatchComparePage() {
     setRunning(false);
   };
 
+  const handleBulkImport = (imported: { label: string; url1: string; url2: string }[]) => {
+    const newPairs = imported.map(p => ({ ...emptyPair(), ...p }));
+    setPairs(prev => {
+      // Replace the single empty default pair if it's the only one and still empty
+      const isDefaultEmpty =
+        prev.length === 1 && !prev[0].label && !prev[0].url1 && !prev[0].url2;
+      return isDefaultEmpty ? newPairs : [...prev, ...newPairs];
+    });
+  };
+
   const validCount = pairs.filter(p => p.url1 && p.url2).length;
 
   return (
     <div className="max-w-4xl mx-auto px-4 py-8">
       <div className="flex items-center justify-between mb-8">
         <div>
-          <h1 className="text-3xl font-bold text-gray-800">Batch Compare</h1>
-          <p className="text-gray-500 mt-1 text-sm">
+          <h1 className="text-3xl font-bold text-gray-800 dark:text-gray-100">Batch Compare</h1>
+          <p className="text-gray-500 dark:text-gray-400 mt-1 text-sm">
             Add multiple URL pairs and compare them all at once.
           </p>
         </div>
         <div className="flex gap-3">
+          <UrlBulkImport onImport={handleBulkImport} disabled={running} />
           <button
             onClick={addPair}
             disabled={running}
-            className="bg-gray-100 text-gray-700 px-5 py-2 rounded-lg font-semibold hover:bg-gray-200 disabled:opacity-40 disabled:cursor-not-allowed transition-colors"
+            className="bg-gray-100 dark:bg-gray-700 text-gray-700 dark:text-gray-200 px-5 py-2 rounded-lg font-semibold hover:bg-gray-200 dark:hover:bg-gray-600 disabled:opacity-40 disabled:cursor-not-allowed transition-colors"
           >
             + Add Pair
           </button>
@@ -155,6 +167,20 @@ export default function BatchComparePage() {
         </div>
       </div>
 
+      <div className="bg-indigo-50 dark:bg-indigo-950/40 border border-indigo-100 dark:border-indigo-800 rounded-xl px-5 py-4 mb-6 text-sm text-indigo-800 dark:text-indigo-200">
+        <p className="font-semibold mb-1">How to add URL pairs</p>
+        <ul className="list-disc list-inside space-y-1 text-indigo-700 dark:text-indigo-300">
+          <li>
+            <strong>Manually:</strong> click <strong>+ Add Pair</strong> to enter one pair at a time.
+          </li>
+          <li>
+            <strong>Bulk import:</strong> click <strong>Import URLs</strong> to paste a list or upload a{' '}
+            <code className="bg-indigo-100 dark:bg-indigo-900 px-1 rounded">.txt</code> file. Put one URL per line —
+            consecutive lines form a pair (line 1 → Site 1, line 2 → Site 2, and so on).
+          </li>
+        </ul>
+      </div>
+
       <div className="space-y-4">
         {pairs.map((pair, idx) => {
           const state = states[pair.id];
@@ -162,17 +188,17 @@ export default function BatchComparePage() {
           const expanded = state?.expanded ?? false;
 
           return (
-            <div key={pair.id} className="bg-white rounded-xl shadow-md overflow-hidden">
+            <div key={pair.id} className="bg-white dark:bg-gray-800 rounded-xl shadow-md overflow-hidden">
               {/* Pair header / inputs */}
               <div className="p-5">
                 <div className="flex items-center gap-3 mb-3">
-                  <span className="text-sm font-semibold text-gray-400 w-6">{idx + 1}.</span>
+                  <span className="text-sm font-semibold text-gray-400 dark:text-gray-500 w-6">{idx + 1}.</span>
                   <input
                     value={pair.label}
                     onChange={e => updatePair(pair.id, 'label', e.target.value)}
                     placeholder="Label (optional)"
                     disabled={running}
-                    className="flex-1 border border-gray-200 rounded-lg px-3 py-1.5 text-sm focus:outline-none focus:ring-2 focus:ring-indigo-400 disabled:opacity-50"
+                    className="flex-1 border border-gray-200 dark:border-gray-600 rounded-lg px-3 py-1.5 text-sm bg-white dark:bg-gray-700 text-gray-900 dark:text-gray-100 placeholder-gray-400 dark:placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-indigo-400 disabled:opacity-50"
                   />
                   {pairs.length > 1 && (
                     <button
@@ -187,25 +213,25 @@ export default function BatchComparePage() {
                 </div>
                 <div className="grid md:grid-cols-2 gap-3">
                   <div>
-                    <label className="block text-xs font-medium text-gray-500 mb-1">Site 1 URL</label>
+                    <label className="block text-xs font-medium text-gray-500 dark:text-gray-400 mb-1">Site 1 URL</label>
                     <input
                       type="url"
                       value={pair.url1}
                       onChange={e => updatePair(pair.id, 'url1', e.target.value)}
                       placeholder="https://example.com"
                       disabled={running}
-                      className="w-full border border-gray-300 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-indigo-500 disabled:opacity-50"
+                      className="w-full border border-gray-300 dark:border-gray-600 rounded-lg px-3 py-2 text-sm bg-white dark:bg-gray-700 text-gray-900 dark:text-gray-100 placeholder-gray-400 dark:placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-indigo-500 disabled:opacity-50"
                     />
                   </div>
                   <div>
-                    <label className="block text-xs font-medium text-gray-500 mb-1">Site 2 URL</label>
+                    <label className="block text-xs font-medium text-gray-500 dark:text-gray-400 mb-1">Site 2 URL</label>
                     <input
                       type="url"
                       value={pair.url2}
                       onChange={e => updatePair(pair.id, 'url2', e.target.value)}
                       placeholder="https://example.org"
                       disabled={running}
-                      className="w-full border border-gray-300 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-indigo-500 disabled:opacity-50"
+                      className="w-full border border-gray-300 dark:border-gray-600 rounded-lg px-3 py-2 text-sm bg-white dark:bg-gray-700 text-gray-900 dark:text-gray-100 placeholder-gray-400 dark:placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-indigo-500 disabled:opacity-50"
                     />
                   </div>
                 </div>
@@ -216,31 +242,31 @@ export default function BatchComparePage() {
                 <div
                   className={`px-5 py-3 flex items-center justify-between border-t ${
                     status === 'loading'
-                      ? 'bg-indigo-50 border-indigo-100'
+                      ? 'bg-indigo-50 dark:bg-indigo-950/30 border-indigo-100 dark:border-indigo-900'
                       : status === 'error'
-                      ? 'bg-red-50 border-red-100'
-                      : 'bg-green-50 border-green-100'
+                      ? 'bg-red-50 dark:bg-red-950/30 border-red-100 dark:border-red-900'
+                      : 'bg-green-50 dark:bg-green-950/30 border-green-100 dark:border-green-900'
                   }`}
                 >
                   <div className="flex items-center gap-2 text-sm">
                     {status === 'loading' && (
                       <>
                         <span className="inline-block w-4 h-4 border-2 border-indigo-500 border-t-transparent rounded-full animate-spin" />
-                        <span className="text-indigo-700">Comparing…</span>
+                        <span className="text-indigo-700 dark:text-indigo-300">Comparing…</span>
                       </>
                     )}
                     {status === 'error' && (
-                      <span className="text-red-700">{state.error}</span>
+                      <span className="text-red-700 dark:text-red-400">{state.error}</span>
                     )}
                     {status === 'done' && state.result && (
                       <>
-                        <span className="text-green-700 font-medium">
+                        <span className="text-green-700 dark:text-green-400 font-medium">
                           Diff:{' '}
-                          <span className={state.result.diffPercent > DIFF_THRESHOLD_PERCENT ? 'text-red-600' : 'text-green-700'}>
+                          <span className={state.result.diffPercent > DIFF_THRESHOLD_PERCENT ? 'text-red-600 dark:text-red-400' : 'text-green-700 dark:text-green-400'}>
                             {state.result.diffPercent}%
                           </span>
                         </span>
-                        <span className="text-gray-400 text-xs">
+                        <span className="text-gray-400 dark:text-gray-500 text-xs">
                           ({state.result.pixelCount.toLocaleString()} / {state.result.totalPixels.toLocaleString()} px)
                         </span>
                       </>
@@ -249,7 +275,7 @@ export default function BatchComparePage() {
                   {status === 'done' && (
                     <button
                       onClick={() => toggleExpanded(pair.id)}
-                      className="text-sm text-indigo-600 hover:text-indigo-800 font-medium"
+                      className="text-sm text-indigo-600 dark:text-indigo-400 hover:text-indigo-800 dark:hover:text-indigo-300 font-medium"
                     >
                       {expanded ? 'Hide ▲' : 'View ▼'}
                     </button>
@@ -259,7 +285,7 @@ export default function BatchComparePage() {
 
               {/* Expanded comparison result */}
               {status === 'done' && expanded && state.result && (
-                <div className="p-4 border-t">
+                <div className="p-4 border-t border-gray-200 dark:border-gray-700">
                   <ComparisonResult
                     screenshot1={state.result.screenshot1}
                     screenshot2={state.result.screenshot2}
@@ -279,7 +305,7 @@ export default function BatchComparePage() {
         <button
           onClick={addPair}
           disabled={running}
-          className="mt-4 w-full border-2 border-dashed border-gray-300 text-gray-400 hover:border-indigo-400 hover:text-indigo-500 rounded-xl py-3 text-sm font-medium transition-colors disabled:opacity-40 disabled:cursor-not-allowed"
+          className="mt-4 w-full border-2 border-dashed border-gray-300 dark:border-gray-600 text-gray-400 dark:text-gray-500 hover:border-indigo-400 dark:hover:border-indigo-500 hover:text-indigo-500 dark:hover:text-indigo-400 rounded-xl py-3 text-sm font-medium transition-colors disabled:opacity-40 disabled:cursor-not-allowed"
         >
           + Add another URL pair
         </button>
